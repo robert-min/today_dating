@@ -86,15 +86,15 @@ def get_blog_post(query, display, start_index, sort):
                 try:
                     for map_soup in blog_post_soup.find_all("div", attrs={"class" : "se-module se-module-map-text"}):
                         place_text = map_soup.find("a")["data-linkdata"]
-                        place = json.dumps(place_text)
-                        place_dict = json.loads(place.decode("utf-8"))
+                        place = json.loads(place_text)
+                        blog_dict = {"keyword": keyword, "title": title, "link": ori_link,
+                                     "placeId": int(place["placeId"])}
                 except:
-                    pass
+                    blog_dict = {"keyword": keyword, "title": title, "link": ori_link}
 
-            blog_dict = {"keyword": keyword, "title": title, "link": ori_link, "placeId": place_dict["placeId"]}
             blog = json.dumps(blog_dict)
 
-            print(keyword)
+            print(place)
             print(blog)
 
             item_index += 1
