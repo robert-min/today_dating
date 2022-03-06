@@ -9,8 +9,8 @@ import math
 from bs4 import BeautifulSoup
 
 
-client_id = ""
-client_secret = ""
+client_id = "erQtIDkUqelPooBmJ5r4"
+client_secret = "jAVQyNK_Q4"
 
 def get_blog_count(query, display):
     encode_query = urllib.parse.quote(query)
@@ -100,7 +100,7 @@ def get_blog_post(query, display, start_index, sort):
 
 if __name__ == '__main__':
     no = 0
-    query = "왕십리 데이트"
+    query = "왕십리데이트"
     display = 100
     start = 1
     sort = "date"
