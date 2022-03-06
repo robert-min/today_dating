@@ -8,10 +8,15 @@ import json
 import math
 from bs4 import BeautifulSoup
 import time
+from kafka import KafkaProducer
 
 # 네이버 API(git 업로드시 삭제)
-client_id = "erQtIDkUqelPooBmJ5r4"
-client_secret = "jAVQyNK_Q4"
+client_id = ""
+client_secret = ""
+
+# kafka producer
+brokers = ["localhost:9091", "localhost:9092", "localhost:9093"]
+producer = KafkaProducer(bootstrap_servers=brokers)
 
 def get_blog_count(query, display):
     # OO 데이트로 기본 검색
@@ -44,17 +49,15 @@ def get_blog_count(query, display):
             print("Blog total : " + str(blog_total))
             print("Blog count : " + str(blog_count))
 
-            search_url = "https://openapi.naver.com/v1/search/blog?query=" + encode_query + \
-                         "&display=" + str(100) + "&start=" + str(1) + "&sort=" + "date"
-            print(search_url)
 
     return blog_count
 
-def get_blog_post(query, display, start_index, sort):
+def get_blog_post(query, display, start_index):
 
     # OO 데이트로 기본 검색
     encode_query = urllib.parse.quote(query + ' 데이트')
-    search_url = "https://openapi.naver.com/v1/search/blog?query=" + encode_query
+    search_url = "https://openapi.naver.com/v1/search/blog?query=" + encode_query + \
+                 "&start=" + str(start_index) + "&display=" + str(display)
     request = urllib.request.Request(search_url)
 
     request.add_header("X-Naver-Client-Id", client_id)
@@ -86,16 +89,19 @@ def get_blog_post(query, display, start_index, sort):
                 try:
                     for map_soup in blog_post_soup.find_all("div", attrs={"class" : "se-module se-module-map-text"}):
                         place_text = map_soup.find("a")["data-linkdata"]
-                        place = json.loads(place_text)
+                        place_dict = json.loads(place_text)
                         blog_dict = {"keyword": keyword, "title": title, "link": ori_link,
-                                     "placeId": int(place["placeId"])}
+                                     "placeId": int(place_dict["placeId"])}
                 except:
                     blog_dict = {"keyword": keyword, "title": title, "link": ori_link}
 
-            blog = json.dumps(blog_dict)
+            place = json.dumps(place_dict).encode("utf-8")
+            blog = json.dumps(blog_dict).encode("utf-8")
 
-            print(place)
+            print(type(place))
+            producer.send("place_db", place)
             print(blog)
+            producer.send("blog_db", blog)
 
             item_index += 1
             time.sleep(0.5)
@@ -106,8 +112,9 @@ if __name__ == '__main__':
     query = "왕십리"
     display = 100
     start = 1
-    sort = "date"
 
     blog_count = get_blog_count(query, display)
     for start_index in range(start, blog_count + 1, display):
-        get_blog_post(query, display, start_index, sort)
+        print(start_index)
+        print(type(start_index))
+        get_blog_post(query, display, start_index)
