@@ -8,11 +8,12 @@ import json
 import math
 from bs4 import BeautifulSoup
 import time
+import naver_secret
 from kafka import KafkaProducer
 
 # 네이버 API(git 업로드시 삭제)
-client_id = ""
-client_secret = ""
+client_id = naver_secret.id
+client_secret = naver_secret.secret
 
 # kafka producer
 brokers = ["localhost:9091", "localhost:9092", "localhost:9093"]
