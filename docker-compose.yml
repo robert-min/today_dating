@@ -70,3 +70,14 @@ services:
       - kafka1
       - kafka2
       - kafka3
+  mysql-sink:
+    image: mysql:8.0
+    container_name: mysql-sink
+    ports:
+      - "3307:3307"
+    environment:
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: aksen5466!
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
