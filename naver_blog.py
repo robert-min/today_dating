@@ -66,7 +66,6 @@ def get_blog_post(query, display, start_index):
 
     response = urllib.request.urlopen(request)
     response_code = response.getcode()
-    print(response_code)
 
     if (response_code == 200):
         response_body = response.read()
@@ -105,7 +104,7 @@ def get_blog_post(query, display, start_index):
             producer.send("blog_db", blog)
 
             item_index += 1
-            time.sleep(0.5)
+            time.sleep(0.3)
 
 
 
@@ -119,3 +118,4 @@ if __name__ == '__main__':
         print(start_index)
         print(type(start_index))
         get_blog_post(query, display, start_index)
+        print()
