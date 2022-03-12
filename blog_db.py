@@ -12,7 +12,6 @@ for message in consumer:
     try:
         msg = json.loads(message.value.decode())
 
-
         cursor = db.cursor()
         sql = "INSERT IGNORE INTO blog (keyword, title, link, placeId) VALUES ('{0}', '{1}', '{2}', {3});".format(
             msg["keyword"],

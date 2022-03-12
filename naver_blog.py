@@ -87,11 +87,11 @@ def get_blog_post(query, display, start_index):
                 blog_post_soup = BeautifulSoup(blog_post_code, "lxml")
 
                 try:
-                    for map_soup in blog_post_soup.find_all("div", attrs={"class" : "se-module se-module-map-text"}):
-                        place_text = map_soup.find("a")["data-linkdata"]
-                        place_dict = json.loads(place_text)
-                        blog_dict = {"keyword": keyword, "title": title, "link": ori_link,
-                                     "placeId": int(place_dict["placeId"])}
+                    map_soup = blog_post_soup.find("div", attrs={"class" : "se-module se-module-map-text"})
+                    place_text = map_soup.find("a")["data-linkdata"]
+                    place_dict = json.loads(place_text)
+                    blog_dict = {"keyword": keyword, "title": title, "link": ori_link,
+                                 "placeId": int(place_dict["placeId"])}
                 except:
                     blog_dict = {"keyword": keyword, "title": title, "link": ori_link}
 
@@ -104,7 +104,7 @@ def get_blog_post(query, display, start_index):
             producer.send("blog_db", blog)
 
             item_index += 1
-            time.sleep(0.3)
+            time.sleep(0.1)
 
 
 
