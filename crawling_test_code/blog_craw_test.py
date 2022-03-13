@@ -3,10 +3,9 @@ from urllib.request import Request
 import urllib
 import json
 
-test_link = 'https://blog.naver.com/thdwb92?Redirect=Log&logNo=221920115591'
-url_link = test_link.replace("?Redirect=Log&logNo=", "/")
+test_link = 'https://openapi.naver.com/v1/search/blog?query=%EC%99%95%EC%8B%AD%EB%A6%AC%20%EB%8D%B0%EC%9D%B4%ED%8A%B8&start=101&display=100'
 
-post_code = urllib.request.urlopen(url_link).read()
+post_code = urllib.request.urlopen(test_link).read()
 post_soup = BeautifulSoup(post_code, 'lxml')
 
 for mainFrame in post_soup.select('iframe#mainFrame'):

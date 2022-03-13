@@ -9,9 +9,6 @@ import math
 from bs4 import BeautifulSoup
 
 
-client_id = "erQtIDkUqelPooBmJ5r4"
-client_secret = "jAVQyNK_Q4"
-
 def get_blog_count(query, display):
     encode_query = urllib.parse.quote(query)
     search_url = "https://openapi.naver.com/v1/search/blog?query=" + encode_query
@@ -46,8 +43,7 @@ def get_blog_post(query, display, start_index, sort):
     global no, fs
 
     encode_query = urllib.parse.quote(query)
-    search_url = "https://openapi.naver.com/v1/search/blog?query=" + encode_query +\
-                 "&display" + str(display) + "&start" + str(start_index) + "&sort" + str(sort)
+    search_url = "https://openapi.naver.com/v1/search/blog?query=%EC%99%95%EC%8B%AD%EB%A6%AC%20%EB%8D%B0%EC%9D%B4%ED%8A%B8&start=101&display=100"
     request = urllib.request.Request(search_url)
 
     request.add_header("X-Naver-Client-Id", client_id)

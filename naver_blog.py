@@ -59,6 +59,7 @@ def get_blog_post(query, display, start_index):
     encode_query = urllib.parse.quote(query + ' 데이트')
     search_url = "https://openapi.naver.com/v1/search/blog?query=" + encode_query + \
                  "&start=" + str(start_index) + "&display=" + str(display)
+    print(search_url)
     request = urllib.request.Request(search_url)
 
     request.add_header("X-Naver-Client-Id", client_id)
@@ -92,16 +93,16 @@ def get_blog_post(query, display, start_index):
                     place_dict = json.loads(place_text)
                     blog_dict = {"keyword": keyword, "title": title, "link": ori_link,
                                  "placeId": int(place_dict["placeId"])}
+                    place = json.dumps(place_dict).encode("utf-8")
+                    blog = json.dumps(blog_dict).encode("utf-8")
+                    producer.send("place_db", place)
+                    producer.send("blog_db", blog)
+                    print(place)
                 except:
-                    blog_dict = {"keyword": keyword, "title": title, "link": ori_link}
+                    pass
 
-            place = json.dumps(place_dict).encode("utf-8")
-            blog = json.dumps(blog_dict).encode("utf-8")
 
-            print(type(place))
-            producer.send("place_db", place)
-            print(blog)
-            producer.send("blog_db", blog)
+
 
             item_index += 1
             time.sleep(0.1)
@@ -109,7 +110,7 @@ def get_blog_post(query, display, start_index):
 
 
 if __name__ == '__main__':
-    query = "왕십리"
+    query = "한양대"
     display = 100
     start = 1
 
@@ -117,5 +118,5 @@ if __name__ == '__main__':
     for start_index in range(start, blog_count + 1, display):
         print(start_index)
         print(type(start_index))
-        get_blog_post(query, display, start_index)
+        get_blog_post(query, display, 101)
         print()
