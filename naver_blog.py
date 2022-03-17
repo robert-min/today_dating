@@ -110,13 +110,13 @@ def get_blog_post(query, display, start_index):
 
 
 if __name__ == '__main__':
-    query = "한양대"
+    query = ["동대문역사문화공원", "신당", "상왕십리"]
     display = 100
     start = 1
-
-    blog_count = get_blog_count(query, display)
-    for start_index in range(start, blog_count + 1, display):
-        print(start_index)
-        print(type(start_index))
-        get_blog_post(query, display, 101)
-        print()
+    for q in query:
+        blog_count = get_blog_count(q, display)
+        for start_index in range(start, blog_count + 1, display):
+            print(start_index)
+            print(type(start_index))
+            get_blog_post(q, display, start_index)
+            print()
