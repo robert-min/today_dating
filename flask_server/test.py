@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, request, jsonify
-import sys
 import search
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 app = Flask(__name__)
 
@@ -17,7 +14,8 @@ def test():
         print(req)
         keyword = req["action"]["params"]["Subway"]
         print(keyword)
-        output = search.rds(keyword)
+        temp = search.rds(keyword)
+        output = temp.find_data()
     return jsonify(output)
 
 
