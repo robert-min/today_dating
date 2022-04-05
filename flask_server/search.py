@@ -8,10 +8,10 @@ class rds:
 
     def find_data(self):
         self.head = self.keyword
-        db = pymysql.connect(host="database-1.c89wkz4nejak.ap-northeast-2.rds.amazonaws.com",
+        db = pymysql.connect(host="",
                              port=3306,
                              user="admin",
-                             password="Aksen5466!",
+                             password="",
                              db="todayDating",
                              charset="utf8")
 
