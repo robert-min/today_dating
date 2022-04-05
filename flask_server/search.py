@@ -7,6 +7,7 @@ class rds:
         self.keyword = keyword
 
     def find_data(self):
+        self.head = self.keyword
         db = pymysql.connect(host="database-1.c89wkz4nejak.ap-northeast-2.rds.amazonaws.com",
                              port=3306,
                              user="admin",
@@ -16,7 +17,7 @@ class rds:
 
         cursor = db.cursor()
 
-        sql = "SELECT * FROM blog WHERE keyword = '{}' ORDER BY RAND() LIMIT 5;".format(self.keyword)
+        sql = "SELECT * FROM blog WHERE keyword = '{}' ORDER BY RAND() LIMIT 5;".format(self.head)
 
         cursor.execute(sql)
         result = cursor.fetchall()
@@ -38,7 +39,7 @@ class rds:
                     {
                         "listCard": {
                             "header": {
-                                "title": "{} 데이트 장소 입니다.".format(temp)
+                                "title": "{} 데이트 장소 입니다.".format(self.keyword)
                             },
                             "items": [
                                 {
@@ -87,3 +88,6 @@ class rds:
         db.close()
         return output
 
+t = rds("왕십리")
+k = t.find_data()
+print(k)
