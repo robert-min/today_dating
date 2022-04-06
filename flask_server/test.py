@@ -13,7 +13,7 @@ def test():
         req = request.get_json()
         keyword = req["action"]["params"]["Subway"]
         temp = search.rds(keyword)
-        output = temp.find_data()
+        output = temp.output_data()
     return jsonify(output)
 
 

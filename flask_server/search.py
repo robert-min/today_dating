@@ -4,10 +4,10 @@ import pymysql
 
 class rds:
     def __init__(self, keyword):
+        self.all_card = list()
         self.keyword = keyword
 
     def find_data(self):
-        self.head = self.keyword
         db = pymysql.connect(host="",
                              port=3306,
                              user="admin",
@@ -17,7 +17,7 @@ class rds:
 
         cursor = db.cursor()
 
-        sql = "SELECT * FROM blog WHERE keyword = '{}' ORDER BY RAND() LIMIT 5;".format(self.head)
+        sql = "SELECT * FROM blog WHERE keyword = '{}' ORDER BY RAND() LIMIT 5;".format(self.keyword)
 
         cursor.execute(sql)
         result = cursor.fetchall()
@@ -32,6 +32,12 @@ class rds:
             temp = cursor.fetchone()
             store_name = temp[1]
             all_card.append([store_name, context, link])
+
+        db.close()
+        return all_card
+
+    def output_data(self):
+        self.all_card = self.find_data()
         output = {
             "version": "2.0",
             "template": {
@@ -43,38 +49,38 @@ class rds:
                             },
                             "items": [
                                 {
-                                    "title": all_card[0][0],
-                                    "description": all_card[0][1],
+                                    "title": self.all_card[0][0],
+                                    "description": self.all_card[0][1],
                                     "link": {
-                                        "web": all_card[0][2]
+                                        "web": self.all_card[0][2]
                                     }
                                 },
                                 {
-                                    "title": all_card[1][0],
-                                    "description": all_card[1][1],
+                                    "title": self.all_card[1][0],
+                                    "description": self.all_card[1][1],
                                     "link": {
-                                        "web": all_card[1][2]
+                                        "web": self.all_card[1][2]
                                     }
                                 },
                                 {
-                                    "title": all_card[2][0],
-                                    "description": all_card[2][1],
+                                    "title": self.all_card[2][0],
+                                    "description": self.all_card[2][1],
                                     "link": {
-                                        "web": all_card[2][2]
+                                        "web": self.all_card[2][2]
                                     }
                                 },
                                 {
-                                    "title": all_card[3][0],
-                                    "description": all_card[3][1],
+                                    "title": self.all_card[3][0],
+                                    "description": self.all_card[3][1],
                                     "link": {
-                                        "web": all_card[3][2]
+                                        "web": self.all_card[3][2]
                                     }
                                 },
                                 {
-                                    "title": all_card[4][0],
-                                    "description": all_card[4][1],
+                                    "title": self.all_card[4][0],
+                                    "description": self.all_card[4][1],
                                     "link": {
-                                        "web": all_card[4][2]
+                                        "web": self.all_card[4][2]
                                     }
                                 },
                             ]
@@ -85,9 +91,10 @@ class rds:
                 ]
             }
         }
-        db.close()
+
         return output
 
-t = rds("왕십리")
-k = t.find_data()
-print(k)
+# testcode
+# t = rds("왕십리")
+# k = t.output_data()
+# print(k)
