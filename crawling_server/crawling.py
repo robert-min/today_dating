@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# blog_DB : keyword, title, link, placeId -> json
-# place_DB : placeId, name, address, latitude, longitude, tel -> json
 import urllib.request
 import urllib.error
 import urllib.parse
-import re
 import json
 import math
 from bs4 import BeautifulSoup
 import time
 import naver_secret
+
 
 # 네이버 API
 client_id = naver_secret.id
@@ -67,14 +65,11 @@ def get_blog_post(query, display, start_index):
     if (response_code == 200):
         response_body = response.read()
         response_body_dict = json.loads(response_body.decode("utf-8"))
+        contents = response_body_dict["items"]
 
-        for item_index in range(0, len(response_body_dict["items"])):
-            remove_tag = re.compile("<.*?>")
-            keyword = str(query)
-            title = re.sub(remove_tag, "", response_body_dict["items"][item_index]["title"])
-            link = response_body_dict["items"][item_index]["link"]
+        for item_index in range(0, len(contents)):
+            link = contents[item_index]["link"]
             ori_link = link.replace("?Redirect=Log&logNo=", "/")
-
             post_code = urllib.request.urlopen(ori_link).read()
             post_soup = BeautifulSoup(post_code, "lxml")
 
@@ -87,12 +82,9 @@ def get_blog_post(query, display, start_index):
                     map_soup = blog_post_soup.find("div", attrs={"class" : "se-module se-module-map-text"})
                     place_text = map_soup.find("a")["data-linkdata"]
                     place_dict = json.loads(place_text)
-                    blog_dict = {"keyword": keyword, "title": title, "link": ori_link,
-                                 "placeId": int(place_dict["placeId"])}
-                    place = json.dumps(place_dict).encode("utf-8")
-                    blog = json.dumps(blog_dict).encode("utf-8")
-                    print(place)
-                    print(blog)
+                    print(contents[item_index])
+                    print("===============")
+                    print(place_dict)
                 except:
                     pass
 
