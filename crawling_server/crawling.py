@@ -7,13 +7,12 @@ import json
 import math
 from bs4 import BeautifulSoup
 import time
-import naver_secret
-
+import secret
 
 
 # 네이버 API
-client_id = naver_secret.id
-client_secret = naver_secret.secret
+client_id = secret.naver_id
+client_secret = secret.naver_secret
 
 def get_blog_count(query, display):
     # OO 데이트로 기본 검색
