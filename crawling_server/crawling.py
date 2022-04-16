@@ -86,7 +86,6 @@ def get_blog_post(query, display, start_index):
                     single_contents = {"blog": contents, "place": place_dict}
                     all_contents.append(single_contents)
                     print(item_index, "page 수집중")
-                    print()
                 except:
                     pass
 
@@ -97,7 +96,6 @@ def get_blog_post(query, display, start_index):
 
 def save_parquet(query, display, start_index):
     data = get_blog_post(query, display, start_index)
-    print("수집완료")
 
     from pyspark.sql import SparkSession
 
@@ -108,9 +106,9 @@ def save_parquet(query, display, start_index):
         .getOrCreate()
 
     df = spark.createDataFrame(data, schema=None)
-    df.write.parquet("./parquet/test.parquet")
+    df.write.json("./")
 
-
+    print("수집완료")
 
 if __name__ == '__main__':
     query = ["용답"]
