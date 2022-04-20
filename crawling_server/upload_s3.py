@@ -28,8 +28,10 @@ def upload_file_s3(bucket_name, path, date):
 
 if __name__ == '__main__':
 
-    tm = localtime(time())
+    # 어제 날짜에 모인 Json 파일 업로드
+    tm = localtime(time() - 86400)
     date = strftime("%Y-%m-%d", tm)
+
     path = "./date_data/" + date
     bucket = "today-dating"
     upload_file_s3(bucket, path, date)
