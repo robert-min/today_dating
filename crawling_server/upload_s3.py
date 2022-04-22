@@ -13,7 +13,7 @@ def upload_file_s3(bucket_name, path, date):
     s3 = boto3.client("s3", aws_access_key_id = ACCESS_KEY, aws_secret_access_key = SECRET_KEY)
 
     file_list = os.listdir(path)
-    file_list_json = [file for file in file_list if file.endswith(".json")]
+    file_list_json = [file for file in file_list if file.endswith((".json", ".txt"))]
 
     for file in file_list_json:
         try:

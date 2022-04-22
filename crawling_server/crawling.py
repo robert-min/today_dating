@@ -123,21 +123,17 @@ def save_json(query, display, start_index, name):
     with open(path + "/{}.json".format(name), "w") as f:
         json.dump(all_contents, f, indent=4, ensure_ascii=False)
 
-# def save_parquet(query, display, start_index):
-#     data = get_blog_post(query, display, start_index)
-#
-#     from pyspark.sql import SparkSession
-#
-#     MAX_MEMORY = "5g"
-#     spark = SparkSession.builder.appName("today_dating") \
-#         .config("spark.executor.memory", MAX_MEMORY) \
-#         .config("spark.driver.memory", MAX_MEMORY) \
-#         .getOrCreate()
-#
-#     df = spark.createDataFrame(data, schema=None)
-#     df.write.json("./")
-#
-#     print("수집완료")
+def save_list(query):
+    from time import time, localtime, strftime
+
+    tm = localtime(time())
+    strftime("%Y-%m-%d", tm)
+
+    path = "./date_data/" + strftime("%Y-%m-%d", tm)
+
+    with open(path + "/list.txt", "w") as f:
+        for index, name in enumerate(query):
+            f.write(str(index) + " " + name + "\n")
 
 if __name__ == '__main__':
     query = ["용답", "신답", "용두", "신설동"]
@@ -149,4 +145,7 @@ if __name__ == '__main__':
         for start_index in range(start, blog_count + 1, display):
             print(start_index)
             save_json(q, display, start_index, i)
-            print()
+        print(q + ": 수집완료")
+
+    save_list(query)
+    print("수집 완료")
