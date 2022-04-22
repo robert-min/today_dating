@@ -3,6 +3,7 @@ import secret
 import json
 import os
 from time import time, localtime, strftime
+import pandas as pd
 
 
 def upload_file_s3(bucket_name, path, date):
@@ -15,7 +16,7 @@ def upload_file_s3(bucket_name, path, date):
     file_list = os.listdir(path)
     file_list_json = [file for file in file_list if file.endswith((".json", ".txt"))]
 
-    for file in file_list_json:
+    for index, file in enumerate(file_list_json):
         try:
             with open(path + "/" + file, "rb") as data:
                 s3.put_object(Bucket=bucket_name,
@@ -29,7 +30,7 @@ def upload_file_s3(bucket_name, path, date):
 if __name__ == '__main__':
 
     # 어제 날짜에 모인 Json 파일 업로드
-    tm = localtime(time() - 86400)
+    tm = localtime(time())  #  - 86400
     date = strftime("%Y-%m-%d", tm)
 
     path = "./date_data/" + date

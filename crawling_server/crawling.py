@@ -64,18 +64,17 @@ def get_blog_post(query, display, start_index):
     response = urllib.request.urlopen(request)
     response_code = response.getcode()
 
-    all_contents = defaultdict(list)
+    all_contents = defaultdict(dict)
     all_contents["keyword"] = query
 
     if (response_code == 200):
         response_body = response.read()
         response_body_dict = json.loads(response_body.decode("utf-8"))
         contents = response_body_dict["items"]
-        all_contents["blog"] = contents
-        all_place = list()
 
-        for item_index in range(0, len(contents)):
-            link = contents[item_index]["link"]
+        for item_index, content in enumerate(contents):
+            all_contents[item_index]["blog"] = content
+            link = content["link"]
             ori_link = link.replace("?Redirect=Log&logNo=", "/")
             post_code = urllib.request.urlopen(ori_link).read()
             post_soup = BeautifulSoup(post_code, "lxml")
@@ -89,14 +88,12 @@ def get_blog_post(query, display, start_index):
                     map_soup = blog_post_soup.find("div", attrs={"class" : "se-module se-module-map-text"})
                     place_text = map_soup.find("a")["data-linkdata"]
                     place_dict = json.loads(place_text)
-                    all_place.append(place_dict)
-
+                    all_contents[item_index]["place"] = place_dict
                 except:
                     pass
             item_index += 1
             time.sleep(0.1)
 
-        all_contents["place"] = all_place
 
     return all_contents
 
@@ -120,7 +117,7 @@ def save_json(query, display, start_index, name):
             print("Failed to create")
             raise
 
-    with open(path + "/{}.json".format(name), "w") as f:
+    with open(path + "/{}-{}.json".format(strftime("%Y-%m-%d", tm), name), "w") as f:
         json.dump(all_contents, f, indent=4, ensure_ascii=False)
 
 def save_list(query):
@@ -132,8 +129,8 @@ def save_list(query):
     path = "./date_data/" + strftime("%Y-%m-%d", tm)
 
     with open(path + "/list.txt", "w") as f:
-        for index, name in enumerate(query):
-            f.write(str(index) + " " + name + "\n")
+        for name in query:
+            f.write(name + " ")
 
 if __name__ == '__main__':
     query = ["용답", "신답", "용두", "신설동"]
