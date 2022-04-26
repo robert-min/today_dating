@@ -25,7 +25,7 @@ for object in bucket.objects.filter(Prefix=path):
     dataset = json.load(body)
 
     # db 저장
-    db = pymysql.connect(host="localhost", port=3306, user="root", password="aksen5466!", db="todayDating",
+    db = pymysql.connect(host="localhost", port=3306, user="root", password=secret.mysql_pw, db="todayDating",
                          charset="utf8")
 
     cursor = db.cursor()

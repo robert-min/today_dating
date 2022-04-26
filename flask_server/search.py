@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pymysql
+import secret
 
 class rds:
     def __init__(self, keyword):
@@ -7,10 +8,10 @@ class rds:
         self.keyword = keyword
 
     def find_data(self):
-        db = pymysql.connect(host="",
+        db = pymysql.connect(host=secret.mysql_host,
                              port=3306,
                              user="admin",
-                             password="",
+                             password=secret.mysql_pw,
                              db="todayDating",
                              charset="utf8")
 
