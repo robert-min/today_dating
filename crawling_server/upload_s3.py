@@ -1,9 +1,7 @@
 import boto3
 import secret
-import json
 import os
 from time import time, localtime, strftime
-import pandas as pd
 
 
 def upload_file_s3(bucket_name, path, date):

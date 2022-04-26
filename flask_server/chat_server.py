@@ -11,11 +11,11 @@ app = Flask(__name__)
 def test():
     if request.method == "POST":
         req = request.get_json()
+        print(req)
         keyword = req["action"]["params"]["Subway"]
         temp = search.rds(keyword)
         output = temp.output_data()
     return jsonify(output)
-
 
 
 if __name__ == "__main__":

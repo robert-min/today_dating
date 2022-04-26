@@ -18,7 +18,6 @@ date = strftime("%Y-%m-%d", tm)
 # folder download
 path = date + "/" + date
 
-
 for object in bucket.objects.filter(Prefix=path):
     key = object.key
     print(key)
