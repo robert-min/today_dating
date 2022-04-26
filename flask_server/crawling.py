@@ -107,8 +107,6 @@ class NaverApi:
             print(start_index)
             temp = self.get_blog_post(display, start_index)
             contents.append(temp)
-        print(self.keyword + ": 수집완료")
-
 
         import json
         import os
@@ -136,6 +134,8 @@ class NaverApi:
         with open(path + "/list.txt", "a+") as f:
             f.write(strftime("%H-%M-%S", tm) + ".json, " + self.keyword + "\n")
 
+        print("{} : 수집완료".format(self.keyword))
+
 
 
     def output_data(self):
@@ -157,9 +157,9 @@ class NaverApi:
 
 # test code
 
-from time import time, gmtime
-keyword = "이화여대"
-tm = gmtime(time())
-test = NaverApi(keyword)
-test.save_json(tm)
-test.save_list(tm)
+# from time import time, gmtime
+# keyword = "이화여대"
+# tm = gmtime(time())
+# test = NaverApi(keyword)
+# test.save_json(tm)
+# test.save_list(tm)
