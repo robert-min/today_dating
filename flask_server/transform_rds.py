@@ -12,7 +12,7 @@ bucket = s3r.Bucket("today-dating")
 
 
 # 한시간 전 파일
-tm = gmtime(time() - 6600) #  - 86400
+tm = gmtime(time()) #  - 6600
 date = strftime("%Y-%m-%d", tm)
 file_name = strftime("%H", tm)
 

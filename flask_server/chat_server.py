@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, request, jsonify, session, redirect, url_for
+from flask import Flask, request, jsonify
 import search
-from crawling import NaverApi
-from time import gmtime, time
+from naver_api import NaverApi
+from time import time, gmtime
+
+# (airflow 스케줄링 작업 후 진행) kafka producer
+# brokers = ["localhost:9091", "localhost:9092", "localhost:9093"]
+# producer = KafkaProducer(bootstrap_servers=brokers)
 
 app = Flask(__name__)
 
@@ -11,10 +15,8 @@ app = Flask(__name__)
 def test():
     if request.method == "POST":
         req = request.get_json()
-        print(req)
         keyword = req["action"]["params"]["Subway"]
-        temp = search.rds(keyword)
-        output = temp.output_data()
+        output = search.rds(keyword).output_data()
     return jsonify(output)
 
 @app.route('/nokeyword', methods=["POST"])
@@ -22,22 +24,32 @@ def nokeyword():
     if request.method == "POST":
         req = request.get_json()
         keyword = req["userRequest"]["utterance"]
-        output = NaverApi(keyword).output_data()
-        redirect(url_for("save_page", k_data=keyword))
-        # session["keyword"] = keyword
+        # producer.send("keyword", keyword)
+        output = nokeyword_output()
+
+        # 현재 코드는 두개 이상의 저장된 키워드 중복될 시 오류 발생
+        tm = gmtime(time())
+        NaverApi(keyword).save_json(tm)
+        NaverApi(keyword).save_list(tm)
+
     return jsonify(output)
 
 
-@app.route("/save_page/<k_data>")
-def save_page(k_data):
-    print(k_data)
-    # tm = gmtime(time())
-    # NaverApi(data).save_json(tm)
-    # NaverApi(data).save_list(tm)
-    # 세션 삭제
-    # session.pop(session["keyword"], None)
-    return jsonify("clear session")
+def nokeyword_output():
+    output = {
+                "version": "2.0",
+                "template": {
+                    "outputs": [
+                        {
+                            "simpleText": {
+                                "text": "해당 키워드는 아직 저장되지 않았습니다. \n 1시간 후 키워드가 추가됩니다."
+                            }
+                        }
+                    ]
+                }
+            }
 
+    return output
 
 if __name__ == "__main__":
     app.secret_key = "aksen"
